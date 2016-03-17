@@ -627,7 +627,12 @@ class WC_Gateway_Payu_In extends WC_Payment_Gateway {
 		//generation of hash after transaction is = salt + status + reverse order of variables
 		$hash_vars_seq = array_reverse($hash_vars_seq);
 
-		$merc_hash_string = $txnRs['additionalCharges']. '|' .$salt . '|' . $txnRs['status'];
+		if($txnRs['status'] == 'success')
+		{
+			$merc_hash_string = $txnRs['additionalCharges']. '|' .$salt . '|' . $txnRs['status'];
+		} else {
+			$merc_hash_string = $salt . '|' . $txnRs['status'];
+		}
 
 		foreach ($hash_vars_seq as $merc_hash_var) {
 			$merc_hash_string .= '|';
