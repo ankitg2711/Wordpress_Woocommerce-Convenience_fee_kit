@@ -407,6 +407,8 @@ class WC_Gateway_Payu_In extends WC_Payment_Gateway {
 		/* Checking hash / true or false */
 		if($this->check_hash_after_transaction($salt, $txnRs)) {
 
+		
+
 			if($txnRs['status']=='success'){
 				$this->payment_success($txnid);
 			}
@@ -417,7 +419,7 @@ class WC_Gateway_Payu_In extends WC_Payment_Gateway {
 
 			if($txnRs['status']=='failure'){
 				$this->payment_failure($txnid);
-			}
+			} 
 
 		} else {
 			die('Hash incorrect!');
@@ -627,12 +629,14 @@ class WC_Gateway_Payu_In extends WC_Payment_Gateway {
 		//generation of hash after transaction is = salt + status + reverse order of variables
 		$hash_vars_seq = array_reverse($hash_vars_seq);
 
-		if($txnRs['status'] == 'success')
+		if(!empty($txnRs['additionalCharges']))
 		{
 			$merc_hash_string = $txnRs['additionalCharges']. '|' .$salt . '|' . $txnRs['status'];
 		} else {
 			$merc_hash_string = $salt . '|' . $txnRs['status'];
 		}
+
+		
 
 		foreach ($hash_vars_seq as $merc_hash_var) {
 			$merc_hash_string .= '|';
